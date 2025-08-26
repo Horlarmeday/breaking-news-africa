@@ -1,0 +1,40 @@
+{
+  "name": "breaking-news-alerts",
+  "version": "1.0.0",
+  "description": "Nigerian Breaking News Alert System - Monitors RSS feeds and social media for Nigerian breaking news and sends alerts via Telegram and Email",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-rss": "node -e \"const RSSMonitor = require('./src/rssMonitor'); new RSSMonitor().parseAllFeeds().then(console.log);\"",
+    "test-telegram": "node -e \"const TelegramNotifier = require('./src/telegramBot'); new TelegramNotifier().testConnection().then(console.log);\"",
+    "test-email": "node -e \"const EmailNotifier = require('./src/emailSender'); new EmailNotifier().testConnection().then(console.log);\"",
+    "test-scraping": "node -e \"const SocialMediaScraper = require('./src/scraper'); new SocialMediaScraper().testScraping().then(console.log).finally(process.exit);\"",
+    "status": "node -e \"const config = require('./config/config'); console.log('Config Status:', {telegram: config.telegram.enabled, email: config.email.enabled, scraping: config.scraping.enabled});\""
+  },
+  "keywords": [
+    "news",
+    "alerts",
+    "nigeria",
+    "breaking-news",
+    "rss",
+    "telegram",
+    "email",
+    "monitoring"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.1",
+    "node-cron": "^4.2.1",
+    "node-telegram-bot-api": "^0.66.0",
+    "nodemailer": "^7.0.5",
+    "puppeteer": "^24.17.0",
+    "rss-parser": "^3.13.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
