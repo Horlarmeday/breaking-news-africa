@@ -19,17 +19,14 @@ class EmailNotifier {
    */
   initializeTransporter() {
     try {
-      this.transporter = nodemailer.createTransporter({
-        service: config.email.service,
-        port: config.email.port,
-        secure: config.email.secure,
+      this.transporter = nodemailer.createTransport({
+        host: config.email.host,
+        port: 587,
+        secure: false, // upgrade later with STARTTLS
         auth: {
           user: config.email.user,
           pass: config.email.pass
         },
-        tls: {
-          rejectUnauthorized: false
-        }
       });
 
       logger.info('✅ Email transporter initialized successfully');

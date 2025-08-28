@@ -17,7 +17,7 @@ const config = {
     pass: process.env.EMAIL_PASS,
     to: process.env.EMAIL_TO,
     enabled: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.EMAIL_TO),
-    service: 'gmail',
+    host: process.env.EMAIL_SMTP_HOST,
     port: 587,
     secure: false
   },
