@@ -198,7 +198,6 @@ const retry = async (fn, maxRetries = 3, delay = 1000) => {
       return await fn();
     } catch (error) {
       lastError = error;
-      logger.debug(`Retry ${i + 1}/${maxRetries} failed:`, error.message);
       
       if (i < maxRetries - 1) {
         await sleep(delay * Math.pow(2, i)); // Exponential backoff

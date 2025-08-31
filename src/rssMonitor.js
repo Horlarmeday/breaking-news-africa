@@ -2,7 +2,7 @@ const Parser = require('rss-parser');
 const fs = require('fs').promises;
 const path = require('path');
 const { RSS_FEEDS } = require('../config/feeds');
-const { BREAKING_NEWS_KEYWORDS, ALL_NIGERIAN_KEYWORDS } = require('../config/keywords');
+const { BREAKING_NEWS_KEYWORDS, ALL_WEST_AFRICAN_KEYWORDS, ALL_NIGERIAN_KEYWORDS } = require('../config/keywords');
 const config = require('../config/config');
 const { logger } = require('./utils');
 
@@ -40,14 +40,24 @@ class RSSMonitor {
 
   async saveProcessedArticles() {
     try {
+      // Implement size-based cleanup to prevent JSON bloating
+      const maxArticles = 10000;
+      let articlesArray = Array.from(this.processedArticles);
+      
+      if (articlesArray.length > maxArticles) {
+        // Keep only the most recent articles (assuming newer articles are added later)
+        articlesArray = articlesArray.slice(-maxArticles);
+        this.processedArticles = new Set(articlesArray);
+        logger.info(`🧹 Trimmed processed articles to ${maxArticles} to prevent file bloating`);
+      }
+      
       const data = {
-        articles: Array.from(this.processedArticles),
+        articles: articlesArray,
         lastUpdated: new Date().toISOString(),
         totalCount: this.processedArticles.size
       };
       
       await fs.writeFile(this.lastProcessedFile, JSON.stringify(data, null, 2));
-      logger.debug(`Saved ${this.processedArticles.size} processed articles to file`);
     } catch (error) {
       logger.error('Error saving processed articles:', error.message);
     }
@@ -81,40 +91,36 @@ class RSSMonitor {
   /**
    * Check if text contains Nigerian context keywords
    */
-  containsNigerianContext(text) {
+  /**
+   * Check if text contains West African context keywords
+   */
+  containsWestAfricanContext(text) {
     if (!text) return false;
     
     const upperText = text.toUpperCase();
-    return ALL_NIGERIAN_KEYWORDS.some(keyword => 
+    return ALL_WEST_AFRICAN_KEYWORDS.some(keyword => 
       upperText.toUpperCase().includes(keyword.toUpperCase())
     );
   }
 
   /**
-   * Filter articles for Nigerian breaking news
+   * Legacy method for backward compatibility
+   */
+  containsNigerianContext(text) {
+    return this.containsWestAfricanContext(text);
+  }
+
+  /**
+   * Filter articles for West African context
    */
   filterArticle(article) {
     const title = article.title || '';
     const description = article.contentSnippet || article.content || '';
     const fullText = `${title} ${description}`;
 
-    const hasBreakingNews = this.containsBreakingNews(fullText);
-    const hasNigerianContext = this.containsNigerianContext(fullText);
+    const hasWestAfricanContext = this.containsWestAfricanContext(fullText);
 
-    if (hasBreakingNews && hasNigerianContext) {
-      logger.debug(`✅ Article matches criteria: ${title.substring(0, 60)}...`);
-      return true;
-    }
-
-    if (hasBreakingNews) {
-      logger.debug(`⚠️  Breaking news but not Nigerian: ${title.substring(0, 60)}...`);
-    }
-    
-    if (hasNigerianContext) {
-      logger.debug(`ℹ️  Nigerian content but not breaking: ${title.substring(0, 60)}...`);
-    }
-
-    return false;
+    return hasWestAfricanContext;
   }
 
   /**
@@ -122,7 +128,7 @@ class RSSMonitor {
    */
   async parseFeed(url, sourceName) {
     try {
-      logger.debug(`Fetching RSS feed: ${url}`);
+  
       const feed = await this.parser.parseURL(url);
       
       const newArticles = [];
@@ -136,7 +142,7 @@ class RSSMonitor {
             continue;
           }
           
-          // Filter for Nigerian breaking news
+          // Filter for West African context
           if (this.filterArticle(item)) {
             const processedArticle = {
               id: articleId,
@@ -157,7 +163,7 @@ class RSSMonitor {
           }
         }
         
-        logger.info(`📰 ${sourceName}: Found ${newArticles.length} new Nigerian breaking news articles from ${feed.items.length} total items`);
+        logger.info(`📰 ${sourceName}: Found ${newArticles.length} new West African articles from ${feed.items.length} total items`);
       } else {
         logger.warn(`⚠️  ${sourceName}: No items found in RSS feed`);
       }
@@ -195,27 +201,23 @@ class RSSMonitor {
     await this.saveProcessedArticles();
     
     const duration = Date.now() - startTime;
-    logger.info(`✅ RSS monitoring completed in ${duration}ms. Found ${allNewArticles.length} new alerts.`);
+    logger.info(`✅ RSS monitoring completed in ${duration}ms. Found ${allNewArticles.length} new West African articles.`);
     
     return allNewArticles;
   }
 
   /**
-   * Clean up old processed articles to prevent memory bloat
+   * Clean up old processed articles to prevent file bloating
    */
   async cleanupOldArticles() {
-    const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-    const cutoffDate = Date.now() - maxAge;
-    
     try {
       const data = await fs.readFile(this.lastProcessedFile, 'utf8');
       const processed = JSON.parse(data);
       
-      // This is a simplified cleanup - in a real implementation,
-      // we'd need to store timestamps for each article
-      if (processed.articles && processed.articles.length > 10000) {
-        // Keep only the most recent 5000 articles
-        const recentArticles = processed.articles.slice(-5000);
+      // More aggressive cleanup to prevent file bloating
+      if (processed.articles && processed.articles.length > 15000) {
+        // Keep only the most recent 7500 articles
+        const recentArticles = processed.articles.slice(-7500);
         this.processedArticles = new Set(recentArticles);
         
         await this.saveProcessedArticles();

@@ -16,6 +16,8 @@ const config = {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
     to: process.env.EMAIL_TO,
+    // Support multiple recipients separated by commas
+    recipients: process.env.EMAIL_TO ? process.env.EMAIL_TO.split(',').map(email => email.trim()) : [],
     enabled: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.EMAIL_TO),
     host: process.env.EMAIL_SMTP_HOST,
     port: 587,

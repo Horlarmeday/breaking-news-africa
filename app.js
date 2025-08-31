@@ -409,7 +409,7 @@ class BreakingNewsAlertSystem {
     try {
       await this.telegramNotifier.close();
       await this.emailNotifier.close();
-      await this.socialScraper.closeBrowser();
+  
       logger.info('✅ All services shutdown gracefully');
     } catch (error) {
       logger.error('❌ Error during shutdown:', error.message);

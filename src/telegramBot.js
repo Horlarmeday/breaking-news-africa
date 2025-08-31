@@ -44,7 +44,7 @@ class TelegramNotifier {
       logger.info(`🤖 Telegram bot connected: @${me.username} (${me.first_name})`);
       
       // Test sending a message
-      await this.bot.sendMessage(this.chatId, '🧪 Nigerian Breaking News Alert System - Connection Test\n\nBot is working correctly!');
+      await this.bot.sendMessage(this.chatId, '🧪 West African Breaking News Alert System - Connection Test\n\nBot is working correctly!');
       
       return { success: true, botInfo: me };
     } catch (error) {
@@ -64,7 +64,7 @@ class TelegramNotifier {
     // Clean and truncate description for Telegram (max 4096 chars total)
     const description = textUtils.cleanText(article.description, 300);
     
-    const message = `🚨 *BREAKING: NIGERIAN NEWS ALERT*
+    const message = `🚨 *BREAKING: WEST AFRICAN NEWS ALERT*
 
 📰 *${textUtils.cleanText(article.title, 200)}*
 
@@ -77,7 +77,7 @@ ${emoji} *Source:* ${article.source.toUpperCase()}
 
 🔗 [Read Full Article](${article.link})
 
-#BreakingNews #Nigeria #${article.source.replace(/\s+/g, '')}`;
+#BreakingNews #WestAfrica #${article.source.replace(/\s+/g, '')}`;
 
     return message;
   }
@@ -161,7 +161,7 @@ ${emoji} *Source:* ${article.source.toUpperCase()}
     }
 
     try {
-      const message = `📊 *Nigerian News Alert System Status*
+      const message = `📊 *West African News Alert System Status*
 
 ⏰ *Uptime:* ${stats.uptime || 'Unknown'}
 📤 *Alerts Sent:* ${stats.totalAlertsSent || 0}
@@ -171,7 +171,7 @@ ${emoji} *Source:* ${article.source.toUpperCase()}
 🟢 *Status:* ${stats.canSendAlert ? 'Active' : 'Rate Limited'}
 📅 *Last Check:* ${stats.lastRunTime || 'Never'}
 
-#SystemStatus #NigerianNews`;
+#SystemStatus #WestAfricanNews`;
 
       const result = await this.bot.sendMessage(this.chatId, message, {
         parse_mode: 'Markdown'
@@ -194,7 +194,7 @@ ${emoji} *Source:* ${article.source.toUpperCase()}
       return { success: false, error: 'Bot not enabled' };
     }
 
-    const testMessage = `🧪 *Test Alert - Nigerian Breaking News System*
+    const testMessage = `🧪 *Test Alert - West African Breaking News System*
 
 This is a test message to verify Telegram notifications are working correctly.
 
