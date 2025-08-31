@@ -491,7 +491,7 @@ async function main() {
     // Initialize and start the alert system
     await alertSystem.init();
     alertSystem.start();
-    
+
   } catch (error) {
     logger.error('❌ Failed to start the alert system:', error.message);
     process.exit(1);
