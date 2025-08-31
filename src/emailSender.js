@@ -410,13 +410,13 @@ Automated Status Report - ${new Date().toLocaleString()}
     }
 
     const testTime = new Date().toLocaleString();
-    const subject = '🧪 Test Email - West African Breaking News Alert System';
+    const subject = '🧪 Test Email - NNB NEWS ALERT';
     
     const htmlContent = `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
     <div style="background: linear-gradient(135deg, #00d2d3, #54a0ff); color: white; padding: 20px; text-align: center; border-radius: 8px;">
         <h1>🧪 Test Email</h1>
-        <p>West African Breaking News Alert System</p>
+        <p>NNB NEWS ALERT</p>
     </div>
     
     <div style="background: white; padding: 30px; margin-top: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">

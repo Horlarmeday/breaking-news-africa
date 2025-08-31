@@ -34,7 +34,7 @@ class BreakingNewsAlertSystem {
    * Initialize the alert system
    */
   async init() {
-    logger.info('🚀 Initializing Nigerian Breaking News Alert System...');
+    logger.info('🚀 Initializing NNB NEWS ALERT...');
     
     // Validate configuration (warn but don't exit in development)
     if (!config.telegram.enabled && !config.email.enabled) {
@@ -93,7 +93,7 @@ class BreakingNewsAlertSystem {
     }
     
     this.isRunning = true;
-    logger.info('✅ Nigerian Breaking News Alert System initialized successfully!');
+    logger.info('✅ NNB NEWS ALERT initialized successfully!');
   }
 
   /**
@@ -404,7 +404,7 @@ class BreakingNewsAlertSystem {
    * Gracefully shutdown the system
    */
   async shutdown() {
-    logger.info('🛑 Shutting down Nigerian Breaking News Alert System...');
+    logger.info('🛑 Shutting down NNB NEWS ALERT...');
     this.stop();
     
     try {
@@ -450,7 +450,7 @@ async function main() {
     app.get('/', (req, res) => {
       res.json({
         status: 'running',
-        service: 'West African Breaking News Alert System',
+        service: 'NNB NEWS ALERT',
         uptime: process.uptime(),
         timestamp: new Date().toISOString(),
         stats: alertSystem ? alertSystem.stats : {}

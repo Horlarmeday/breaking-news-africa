@@ -53,7 +53,7 @@ const config = {
   rss: {
     timeout: 10000, // 10 seconds
     headers: {
-      'User-Agent': 'Nigerian Breaking News Alert System 1.0'
+      'User-Agent': 'NNB NEWS ALERT 1.0'
     }
   },
   

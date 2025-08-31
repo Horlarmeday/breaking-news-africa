@@ -1,7 +1,7 @@
 {
   "name": "breaking-news-alerts",
   "version": "1.0.0",
-  "description": "Nigerian Breaking News Alert System - Monitors RSS feeds and social media for Nigerian breaking news and sends alerts via Telegram and Email",
+  "description": "NNB NEWS ALERT - Monitors RSS feeds and social media for breaking news and sends alerts via Telegram and Email",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

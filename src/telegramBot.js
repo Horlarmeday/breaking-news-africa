@@ -44,7 +44,7 @@ class TelegramNotifier {
       logger.info(`🤖 Telegram bot connected: @${me.username} (${me.first_name})`);
       
       // Test sending a message
-      await this.bot.sendMessage(this.chatId, '🧪 West African Breaking News Alert System - Connection Test\n\nBot is working correctly!');
+      await this.bot.sendMessage(this.chatId, '🧪 NNB NEWS ALERT - Connection Test\n\nBot is working correctly!');
       
       return { success: true, botInfo: me };
     } catch (error) {
@@ -194,7 +194,7 @@ ${emoji} *Source:* ${article.source.toUpperCase()}
       return { success: false, error: 'Bot not enabled' };
     }
 
-    const testMessage = `🧪 *Test Alert - West African Breaking News System*
+    const testMessage = `🧪 *Test Alert - NNB NEWS ALERT*
 
 This is a test message to verify Telegram notifications are working correctly.
 
