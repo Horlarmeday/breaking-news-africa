@@ -288,7 +288,7 @@ class BreakingNewsAlertSystem {
     const timestamp = new Date().toLocaleString();
     const source = article.source.toUpperCase();
     
-    return `🚨 BREAKING: NIGERIAN NEWS ALERT
+    return `🚨 BREAKING: NNB NEWS ALERT
 
 📰 ${article.title}
 

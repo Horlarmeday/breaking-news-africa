@@ -70,7 +70,7 @@ class EmailNotifier {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>West African Breaking News Alert</title>
+    <title>NNB Breaking News Alert</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -176,7 +176,7 @@ class EmailNotifier {
     <div class="container">
         <div class="header">
             <div class="alert-badge">🚨 BREAKING NEWS ALERT</div>
-            <h1>West African News Alert System</h1>
+            <h1>NNB NEWS ALERT</h1>
         <div class="west-africa-flag">🇳🇬🇳🇪🇧🇫🇧🇯🇹🇬</div>
         </div>
         
@@ -215,8 +215,8 @@ class EmailNotifier {
         </div>
         
         <div class="footer">
-            <p><strong>West African Breaking News Alert System</strong></p>
-        <p>Monitoring international news outlets for West African breaking news</p>
+            <p><strong>NNB NEWS ALERT</strong></p>
+        <p>Monitoring international news outlets for breaking news</p>
             <p style="font-size: 12px; color: #95a5a6;">
                 This is an automated alert. Please verify information from original sources.
             </p>
@@ -235,7 +235,7 @@ class EmailNotifier {
     const alertTime = new Date().toLocaleString();
     
     return `
-🚨 BREAKING: WEST AFRICAN NEWS ALERT 🇳🇬🇳🇪🇧🇫🇧🇯🇹🇬
+🚨 BREAKING: NNB NEWS ALERT 🇳🇬🇳🇪🇧🇫🇧🇯🇹🇬
 
 ${article.title}
 
@@ -250,8 +250,8 @@ ${article.description ? textUtils.cleanText(article.description, 500) : 'No desc
 🔗 Read Full Article: ${article.link}
 
 ────────────────────────────────
-West African Breaking News Alert System
-    Monitoring international news outlets for West African breaking news
+NNB NEWS ALERT
+    Monitoring international news outlets for breaking news
 
 This is an automated alert. Please verify information from original sources.
 `;
@@ -266,13 +266,13 @@ This is an automated alert. Please verify information from original sources.
     }
 
     try {
-      const subject = `🚨 BREAKING: ${textUtils.cleanText(article.title, 100)} - West African News Alert`;
+      const subject = `🚨 BREAKING: ${textUtils.cleanText(article.title, 100)} - NNB NEWS ALERT`;
       const htmlContent = this.generateEmailHTML(article);
       const textContent = this.generateEmailText(article);
 
       const mailOptions = {
         from: {
-          name: 'West African Breaking News Alert',
+          name: 'NNB NEWS ALERT',
           address: config.email.user
         },
         to: config.email.recipients.length > 0 ? config.email.recipients : config.email.to,
@@ -315,13 +315,13 @@ This is an automated alert. Please verify information from original sources.
     }
 
     try {
-      const subject = '📊 West African News Alert System - Status Report';
+      const subject = '📊 NNB NEWS ALERT - Status Report';
       
       const htmlContent = `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
     <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; text-align: center; border-radius: 8px;">
         <h1>📊 System Status Report</h1>
-        <p>West African Breaking News Alert System</p>
+        <p>NNB NEWS ALERT</p>
     </div>
     
     <div style="background: white; padding: 30px; margin-top: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -358,13 +358,13 @@ This is an automated alert. Please verify information from original sources.
     </div>
     
     <div style="margin-top: 20px; text-align: center; color: #7f8c8d; font-size: 14px;">
-        <p>West African Breaking News Alert System</p>
+        <p>NNB NEWS ALERT</p>
         <p>Automated Status Report - ${new Date().toLocaleString()}</p>
     </div>
 </div>`;
 
       const textContent = `
-📊 WEST AFRICAN NEWS ALERT SYSTEM - STATUS REPORT
+📊 NNB NEWS ALERT - STATUS REPORT
 
 ⏰ Uptime: ${stats.uptime || 'Unknown'}
 📤 Total Alerts Sent: ${stats.totalAlertsSent || 0}
@@ -375,13 +375,13 @@ This is an automated alert. Please verify information from original sources.
 📅 Last Check: ${stats.lastRunTime || 'Never'}
 
 ────────────────────────────────
-West African Breaking News Alert System
+NNB NEWS ALERT
 Automated Status Report - ${new Date().toLocaleString()}
 `;
 
       const mailOptions = {
         from: {
-          name: 'West African Breaking News Alert',
+          name: 'NNB NEWS ALERT',
           address: config.email.user
         },
         to: config.email.recipients.length > 0 ? config.email.recipients : config.email.to,
@@ -435,13 +435,13 @@ Automated Status Report - ${new Date().toLocaleString()}
     </div>
     
     <div style="margin-top: 20px; text-align: center; color: #7f8c8d; font-size: 14px;">
-        <p>West African Breaking News Alert System</p>
+        <p>NNB NEWS ALERT</p>
         <p>Email Test - ${testTime}</p>
     </div>
 </div>`;
 
     const textContent = `
-🧪 TEST EMAIL - WEST AFRICAN BREAKING NEWS ALERT SYSTEM
+🧪 TEST EMAIL - NNB NEWS ALERT
 
 ✅ Email System Test Successful!
 
@@ -455,14 +455,14 @@ Test Details:
 If you receive this message, your email notifications are configured correctly!
 
 ────────────────────────────────
-West African Breaking News Alert System
+NNB NEWS ALERT
 Email Test - ${testTime}
 `;
 
     try {
       const mailOptions = {
         from: {
-          name: 'West African Breaking News Alert',
+          name: 'NNB NEWS ALERT',
           address: config.email.user
         },
         to: config.email.to,

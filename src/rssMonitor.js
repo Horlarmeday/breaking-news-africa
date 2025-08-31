@@ -163,7 +163,7 @@ class RSSMonitor {
           }
         }
         
-        logger.info(`📰 ${sourceName}: Found ${newArticles.length} new West African articles from ${feed.items.length} total items`);
+        logger.info(`📰 ${sourceName}: Found ${newArticles.length} new articles from ${feed.items.length} total items`);
       } else {
         logger.warn(`⚠️  ${sourceName}: No items found in RSS feed`);
       }

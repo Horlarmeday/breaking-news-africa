@@ -1,4 +1,4 @@
-# Nigerian Breaking News Alert System
+# NNB NEWS ALERT
 
 A Node.js application that monitors RSS feeds from major news outlets (BBC, CNN, Al Jazeera, MSNBC, Sky News) for Nigerian breaking news and sends real-time alerts via Telegram and Email.
 

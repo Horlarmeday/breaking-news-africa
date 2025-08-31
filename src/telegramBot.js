@@ -64,7 +64,7 @@ class TelegramNotifier {
     // Clean and truncate description for Telegram (max 4096 chars total)
     const description = textUtils.cleanText(article.description, 300);
     
-    const message = `🚨 *BREAKING: WEST AFRICAN NEWS ALERT*
+    const message = `🚨 *BREAKING: NNB NEWS ALERT*
 
 📰 *${textUtils.cleanText(article.title, 200)}*
 
@@ -161,7 +161,7 @@ ${emoji} *Source:* ${article.source.toUpperCase()}
     }
 
     try {
-      const message = `📊 *West African News Alert System Status*
+      const message = `📊 *NNB NEWS ALERT Status*
 
 ⏰ *Uptime:* ${stats.uptime || 'Unknown'}
 📤 *Alerts Sent:* ${stats.totalAlertsSent || 0}
