@@ -1,4 +1,5 @@
 const cron = require('node-cron');
+const express = require('express');
 const RSSMonitor = require('./src/rssMonitor');
 const TelegramNotifier = require('./src/telegramBot');
 const EmailNotifier = require('./src/emailSender');
@@ -441,13 +442,55 @@ async function main() {
   alertSystem = new BreakingNewsAlertSystem();
   
   try {
+    // Create Express server for Render deployment first
+    const app = express();
+    const PORT = process.env.PORT || 3000;
+    
+    // Health check endpoint
+    app.get('/', (req, res) => {
+      res.json({
+        status: 'running',
+        service: 'West African Breaking News Alert System',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        stats: alertSystem ? alertSystem.stats : {}
+      });
+    });
+    
+    // Health check endpoint
+    app.get('/health', (req, res) => {
+      res.json({
+        status: 'healthy',
+        timestamp: new Date().toISOString()
+      });
+    });
+    
+    // Status endpoint
+    app.get('/status', (req, res) => {
+      res.json({
+        system: {
+          isRunning: alertSystem ? alertSystem.isRunning : false,
+          stats: alertSystem ? alertSystem.stats : {},
+          config: {
+            telegramEnabled: config.telegram.enabled,
+            emailEnabled: config.email.enabled,
+            scrapingEnabled: config.scraping.enabled,
+            rssInterval: config.intervals.rss,
+            socialInterval: config.intervals.social
+          }
+        }
+      });
+    });
+    
+    // Start the HTTP server immediately
+    app.listen(PORT, () => {
+      logger.info(`🌐 HTTP server running on port ${PORT}`);
+      logger.info(`📊 Status available at: http://localhost:${PORT}/status`);
+    });
+    
+    // Initialize and start the alert system
     await alertSystem.init();
     alertSystem.start();
-    
-    // Keep the process alive
-    setInterval(() => {
-      // This keeps the Node.js process running
-    }, 1000);
     
   } catch (error) {
     logger.error('❌ Failed to start the alert system:', error.message);
