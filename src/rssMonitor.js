@@ -99,7 +99,7 @@ class RSSMonitor {
     
     const upperText = text.toUpperCase();
     return ALL_WEST_AFRICAN_KEYWORDS.some(keyword => 
-      upperText.toUpperCase().includes(keyword.toUpperCase())
+      upperText.includes(keyword.toUpperCase())
     );
   }
 

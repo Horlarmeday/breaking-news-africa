@@ -252,11 +252,10 @@ const WEST_AFRICAN_KEYWORDS = {
   ]
 };
 
-// Combine all West African keywords into a single array for easy searching
+// Flatten all keywords into a single array for easy searching
 const ALL_WEST_AFRICAN_KEYWORDS = [].concat(
   WEST_AFRICAN_KEYWORDS.countries,
   WEST_AFRICAN_KEYWORDS.cities,
-  WEST_AFRICAN_KEYWORDS.regions,
   WEST_AFRICAN_KEYWORDS.politicians,
   WEST_AFRICAN_KEYWORDS.organizations,
   WEST_AFRICAN_KEYWORDS.parties,
