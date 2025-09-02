@@ -14,23 +14,22 @@ const BREAKING_NEWS_KEYWORDS = [
   'BREAKING NEWS'
 ];
 
-// West African Context Keywords - At least one must be present
+// Restricted to 5 Countries Only - Nigeria, Niger, Burkina Faso, Benin, Togo
 const WEST_AFRICAN_KEYWORDS = {
-  // Countries/Regions - Core identifiers
+  // Countries/Regions - Core identifiers (5 countries only)
   countries: [
     // Nigeria
     'Nigeria', 'Nigerian', 'Nigerians', 'Federal Republic of Nigeria',
-    // Niger
-    'Niger', 'Nigerien', 'Nigeriens', 'Republic of Niger',
+    // Niger (more specific to avoid Niger River matches)
+    'Republic of Niger', 'Nigerien', 'Nigeriens', 'Niger Republic', 'Niger country',
     // Burkina Faso
     'Burkina Faso', 'Burkinabé', 'Burkinabe',
     // Benin
     'Benin', 'Beninese', 'Republic of Benin',
     // Togo
-    'Togo', 'Togolese', 'Republic of Togo',
-    // Regional
-    'West Africa', 'ECOWAS', 'Economic Community of West African States',
-    'Sahel', 'Sahelian', 'Gulf of Guinea'
+    'Togo', 'Togolese', 'Republic of Togo'
+    // Note: Removed broader regional terms to prevent matching other countries
+    // Note: Removed standalone 'Niger' to avoid matching Niger River
   ],
 
   // Major Cities - Only capital cities and major economic centers
@@ -83,8 +82,8 @@ const WEST_AFRICAN_KEYWORDS = {
     'NAFDAC', 'National Agency for Food and Drug Administration',
     'FIRS', 'Federal Inland Revenue Service',
     // Niger
-    'CENI Niger', 'Central Bank of Niger',
-    'Niger Armed Forces',
+    'CENI Niger Republic', 'Central Bank of Niger Republic',
+    'Niger Republic Armed Forces',
     // Burkina Faso
     'CENI Burkina', 'Central Bank of Burkina Faso',
     'Burkina Faso Armed Forces',
@@ -94,9 +93,7 @@ const WEST_AFRICAN_KEYWORDS = {
     // Togo
     'CENI Togo', 'Central Bank of Togo',
     'Togo Armed Forces',
-    // Regional
-    'ECOWAS', 'Economic Community of West African States',
-    'African Union', 'AU'
+    // Note: Removed regional organizations to prevent matching other countries
   ],
 
   // Political Parties - Major active parties
@@ -114,66 +111,45 @@ const WEST_AFRICAN_KEYWORDS = {
     'MPP', 'Mouvement du Peuple pour le Progrès',
     'UPC', 'Union pour le Progrès et le Changement',
     // Benin - Major parties
-    'UP', 'Union Progressiste',
-    'BR', 'Bloc Républicain',
+    'UP Benin', 'Union Progressiste Benin',
+    'Bloc Républicain Benin', 'Bloc Républicain',
     // Togo - Major parties
     'UNIR', 'Union pour la République',
     'ANC', 'Alliance Nationale pour le Changement'
   ],
 
-  // Economic Terms - High-impact financial and economic keywords
+  // Economic Terms - Country-specific only
   economic: [
-    // Currency & Finance
+    // Currency - specific to these countries
     'Naira', 'Nigerian Naira', 'NGN',
     'CFA Franc', 'XOF',
-    'exchange rate', 'devaluation', 'inflation',
-    'foreign exchange', 'forex',
-    'CBN', 'Central Bank',
-    // Oil & Gas - Major economic driver
-    'crude oil', 'oil production', 'oil exports',
-    'natural gas', 'LNG',
-    'Dangote Refinery', 'OPEC',
-    'oil pipeline', 'oil spill',
-    // Trade & Investment
-    'GDP', 'economic growth', 'recession',
-    'foreign investment', 'FDI',
-    'trade deficit', 'import duties',
-    'stock exchange', 'NSE',
-    // Infrastructure
-    'power generation', 'electricity',
-    'telecommunications', '5G network',
-    // Banking
-    'commercial banks', 'fintech',
-    'digital payments', 'cryptocurrency',
-    'budget', 'fiscal policy'
+    'Central Bank of Nigeria',
+    'Central Bank of Niger Republic', 'Central Bank of Burkina Faso',
+    'Central Bank of Benin', 'Central Bank of Togo',
+    // Nigeria-specific economic terms
+    'Dangote Refinery', 'NNPC', 'NNPCL',
+    'NSE', 'Nigerian Stock Exchange',
+    'FIRS', 'Federal Inland Revenue Service',
+    'Nigeria LNG', 'NLNG'
+    // Note: Removed generic economic terms to prevent matching other countries
   ],
 
-  // Security & Conflict Terms - Critical security and conflict keywords
+  // Security & Conflict - Country-specific only
   security: [
-    // Terrorism/Insurgency
-    'Boko Haram', 'ISWAP', 'Islamic State West Africa Province',
-    'terrorism', 'terrorist attack', 'suicide bombing',
-    'insurgency', 'militants', 'extremists',
-    'Al-Qaeda', 'ISIS',
-    // Crime/Violence
-    'bandits', 'banditry', 'kidnapping', 'abduction',
-    'ransom', 'hostages', 'armed robbery',
-    'ethnic conflict', 'religious violence', 'communal clash',
-    'farmers-herders conflict',
-    // Military/Security Operations
-    'military operation', 'counter-terrorism',
-    'air strikes', 'security forces',
-    'joint task force',
-    // Regional Security
-    'G5 Sahel', 'Sahel crisis',
-    'cross-border attacks', 'ECOWAS intervention',
-    // Political Instability
-    'military coup', 'coup d\'état', 'junta',
-    'political crisis', 'state of emergency',
-    'regime change',
-    // General Security
-    'armed conflict', 'violence', 'casualties',
-    'death toll', 'security alert', 'curfew'
+    // Nigeria-specific security groups
+    'Boko Haram', 'ISWAP', 'ISWAP Nigeria',
+    'Nigerian Army', 'Nigerian Navy', 'Nigerian Air Force',
+    'Nigerian Police Force', 'NPF',
+    'DSS', 'Department of State Services',
+    // Niger-specific
+    'Niger Republic Armed Forces',
+    // Burkina Faso-specific
+    'Burkina Faso Armed Forces',
+    // Benin-specific
+    'Benin Armed Forces',
+    // Togo-specific
+    'Togo Armed Forces'
+    // Note: Removed generic security terms to prevent matching other countries
   ],
 
   // Ethnic Groups - Major ethnic groups likely to appear in news
@@ -183,7 +159,7 @@ const WEST_AFRICAN_KEYWORDS = {
     'Yoruba', 'Igbo',
     'Ijaw', 'Kanuri', 'Tiv',
     // Niger - Major groups
-    'Hausa Niger', 'Zarma', 'Tuareg', 'Fulani Niger',
+    'Hausa Niger Republic', 'Zarma Niger', 'Tuareg Niger', 'Fulani Niger Republic',
     // Burkina Faso - Major groups
     'Mossi', 'Fulani Burkina',
     // Benin - Major groups
@@ -198,17 +174,17 @@ const WEST_AFRICAN_KEYWORDS = {
     'Lagos-Ibadan Railway', 'Abuja-Kaduna Railway',
     'Murtala Muhammed Airport', 'Nnamdi Azikiwe Airport',
     'Lagos Port', 'Port Harcourt Port',
-    'Third Mainland Bridge', 'Second Niger Bridge',
+    'Third Mainland Bridge',
     'Lagos-Ibadan Expressway',
     // Power/Energy
     'Kainji Dam', 'Jebba Dam', 'Shiroro Dam',
     'Dangote Refinery', 'National Grid',
     'Transmission Company of Nigeria', 'TCN',
     // Telecommunications
-    'MTN Nigeria', 'Airtel Nigeria', 'Glo',
+    'MTN Nigeria', 'Airtel Nigeria', 'Globacom Nigeria',
     '5G Network', 'NCC',
     // Oil & Gas Infrastructure
-    'Trans-Niger Pipeline', 'West Africa Gas Pipeline',
+    'Nigeria Gas Pipeline',
     'Port Harcourt Refinery', 'Nigeria LNG', 'NLNG',
     // Regional Infrastructure
     'Niamey Airport', 'Ouagadougou Airport',
@@ -239,7 +215,7 @@ const WEST_AFRICAN_KEYWORDS = {
   // Educational Institutions
   education: [
     'University of Lagos', 'UNILAG',
-    'University of Ibadan', 'UI',
+    'University of Ibadan Nigeria', 'UI Nigeria',
     'Ahmadu Bello University', 'ABU',
     'University of Nigeria Nsukka', 'UNN',
     'Obafemi Awolowo University', 'OAU',

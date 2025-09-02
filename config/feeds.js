@@ -15,26 +15,6 @@ const RSS_FEEDS = {
       'http://rss.cnn.com/rss/edition_africa.rss'
     ]
   },
-  aljazeera: {
-    name: 'Al Jazeera',
-    urls: [
-      'https://www.aljazeera.com/xml/rss/all.xml'
-    ]
-  },
-  msnbc: {
-    name: 'MSNBC',
-    urls: [
-      'http://feeds.nbcnews.com/feeds/topstories',
-      'http://feeds.nbcnews.com/feeds/world'
-    ]
-  },
-  sky: {
-    name: 'Sky News',
-    urls: [
-      'http://feeds.skynews.com/feeds/rss/home.xml',
-      'http://feeds.skynews.com/feeds/rss/world.xml'
-    ]
-  },
 
   reuters: {
     name: 'Reuters',
@@ -77,9 +57,6 @@ const SOCIAL_ACCOUNTS = {
   twitter: {
     bbc: '@BBCBreaking',
     cnn: '@cnnbrk',
-    aljazeera: '@AJENews',
-    sky: '@SkyNewsBreak',
-    msnbc: '@MSNBC',
     ap: '@APNews',
     rfi: '@RFI',
     cgtn: '@CGTN',

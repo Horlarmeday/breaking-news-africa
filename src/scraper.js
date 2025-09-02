@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const { logger, textUtils, retry, sleep } = require('./utils');
 const { BREAKING_NEWS_KEYWORDS, ALL_WEST_AFRICAN_KEYWORDS, ALL_NIGERIAN_KEYWORDS } = require('../config/keywords');
-const { SOCIAL_ACCOUNTS } = require('../config/feeds');
+const { SOCIAL_ACCOUNTS, RSS_FEEDS } = require('../config/feeds');
 const config = require('../config/config');
 
 class SocialMediaScraper {
@@ -137,6 +137,45 @@ class SocialMediaScraper {
   }
 
   /**
+   * Parse RSS feed and extract articles
+   */
+  async parseRSSFeed(url, sourceName) {
+    try {
+      const response = await this.httpClient.get(url);
+      const $ = cheerio.load(response.data, { xmlMode: true });
+      
+      const articles = [];
+      
+      // Parse RSS items
+      $('item').each((index, element) => {
+        if (index >= 20) return false; // Limit to 20 articles per feed
+        
+        const $item = $(element);
+        const title = $item.find('title').text().trim();
+        const description = $item.find('description').text().trim();
+        const link = $item.find('link').text().trim();
+        const pubDate = $item.find('pubDate').text().trim();
+        
+        if (title && title.length > 10) {
+          articles.push({
+            title: title,
+            content: description || '',
+            link: link,
+            timestamp: pubDate ? new Date(pubDate).toISOString() : new Date().toISOString(),
+            source: sourceName
+          });
+        }
+      });
+      
+      return articles;
+      
+    } catch (error) {
+      logger.error(`❌ Error parsing RSS feed ${url}:`, error.message);
+      return [];
+    }
+  }
+
+  /**
    * Scrape RSS feeds from news websites (alternative to social media)
    * This is more reliable than scraping social media pages directly
    */
@@ -199,45 +238,33 @@ class SocialMediaScraper {
    * Scrape alternative news sources (RSS-like content)
    */
   async scrapeAlternativeSources() {
-    const sources = [
-      // International sources with African coverage
-      { url: 'https://www.bbc.com/news/world/africa', name: 'BBC Africa' },
-      { url: 'https://www.aljazeera.com/africa/', name: 'Al Jazeera Africa' },
-      { url: 'https://www.reuters.com/world/africa/', name: 'Reuters Africa' },
-      { url: 'https://www.rfi.fr/en/africa/', name: 'RFI Africa' },
-      
-      // Nigerian sources
-      { url: 'https://www.vanguardngr.com/', name: 'Vanguard Nigeria' },
-      { url: 'https://punchng.com/', name: 'Punch Nigeria' },
-      { url: 'https://www.premiumtimesng.com/', name: 'Premium Times' },
-      { url: 'https://dailytrust.com/', name: 'Daily Trust' },
-      { url: 'https://www.thisdaylive.com/', name: 'ThisDay Nigeria' },
-      
-      // Niger sources
-      { url: 'https://actuniger.com/', name: 'ActuNiger' },
-      { url: 'https://www.anp.ne/', name: 'ANP Niger' },
-      
-      // Burkina Faso sources
-      { url: 'https://lefaso.net/', name: 'LeFaso.net' },
-      { url: 'https://www.burkina24.com/', name: 'Burkina24' },
-      
-      // Benin sources
-      { url: 'https://beninwebtv.com/', name: 'Benin Web TV' },
-      { url: 'https://www.24haubenin.info/', name: '24h au Benin' },
-      
-      // Togo sources
-      { url: 'https://www.republicoftogo.com/', name: 'Republic of Togo' },
-      { url: 'https://www.togofirst.com/', name: 'Togo First' },
-      
-      // Regional sources
-      { url: 'https://www.ecowas.int/news/', name: 'ECOWAS News' }
+    // Convert RSS feeds to sources for scraping
+    const sources = [];
+    
+    // Extract all RSS feed URLs from the nested structure
+    Object.entries(RSS_FEEDS).forEach(([key, feedConfig]) => {
+      feedConfig.urls.forEach(url => {
+        sources.push({
+          url: url,
+          name: feedConfig.name,
+          isRSS: true
+        });
+      });
+    });
+    
+    // Add fallback web scraping sources if needed
+    const fallbackSources = [
+      { url: 'https://www.bbc.com/news/world/africa', name: 'BBC Africa Fallback', isRSS: false },
     ];
     
     const allArticles = [];
     
     for (const source of sources) {
       try {
-        const articles = await this.scrapeNewsWebsite(source.url, source.name);
+        // Use RSS parsing for RSS feeds, web scraping for others
+        const articles = source.isRSS 
+          ? await this.parseRSSFeed(source.url, source.name)
+          : await this.scrapeNewsWebsite(source.url, source.name);
         
         for (const article of articles) {
           const postId = this.generatePostId('web', source.name, article.title, article.timestamp);
