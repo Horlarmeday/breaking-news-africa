@@ -26,14 +26,14 @@ const config = {
   
   // Monitoring Intervals (in minutes)
   intervals: {
-    rss: parseInt(process.env.RSS_CHECK_INTERVAL) || 30,
-    social: parseInt(process.env.SOCIAL_CHECK_INTERVAL) || 20
+    rss: parseInt(process.env.RSS_CHECK_INTERVAL) || 15,
+    social: parseInt(process.env.SOCIAL_CHECK_INTERVAL) || 10
   },
   
   // Rate Limiting
   rateLimiting: {
-    maxAlertsPerHour: parseInt(process.env.MAX_ALERTS_PER_HOUR) || 12,
-    alertCooldownMinutes: parseInt(process.env.ALERT_COOLDOWN_MINUTES) || 5
+    maxAlertsPerHour: parseInt(process.env.MAX_ALERTS_PER_HOUR) || 20,
+    alertCooldownMinutes: parseInt(process.env.ALERT_COOLDOWN_MINUTES) || 3
   },
   
   // File Paths

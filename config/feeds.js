@@ -18,8 +18,7 @@ const RSS_FEEDS = {
   aljazeera: {
     name: 'Al Jazeera',
     urls: [
-      'https://www.aljazeera.com/xml/rss/all.xml',
-      'https://www.aljazeera.com/xml/rss/africa.xml'
+      'https://www.aljazeera.com/xml/rss/all.xml'
     ]
   },
   msnbc: {
@@ -40,14 +39,14 @@ const RSS_FEEDS = {
   reuters: {
     name: 'Reuters',
     urls: [
-      'https://www.reuters.com/world/africa/rss'
+      'https://www.reuters.com/world/rss'
     ]
   },
 
   ap: {
-    name: 'AP',
+    name: 'Associated Press',
     urls: [
-      'https://apnews.com/hub/africa?output=rss'
+      'https://apnews.com/index.rss'
     ]
   },
 
@@ -61,7 +60,7 @@ const RSS_FEEDS = {
   cgtn: {
     name: 'CGTN',
     urls: [
-      'https://africa.cgtn.com/feed/'
+      'https://www.cgtn.com/subscribe/rss/section/world.xml'
     ]
   },
 
