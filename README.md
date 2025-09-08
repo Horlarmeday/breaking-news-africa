@@ -1,10 +1,10 @@
 # NNB NEWS ALERT
 
-A Node.js application that monitors RSS feeds from major news outlets (BBC, CNN, Al Jazeera, MSNBC, Sky News) for Nigerian breaking news and sends real-time alerts via Telegram and Email.
+A Node.js application that monitors RSS feeds from major news outlets (BBC, CNN, Al Jazeera, MSNBC, Sky News) for Nigerian news and sends real-time alerts via Telegram and Email.
 
 ## Features
 
-- 🚨 **Breaking News Detection**: Filters for breaking news keywords (BREAKING, URGENT, ALERT, etc.)
+- 🎯 **News Filtering**: Filters for news relevant to Nigeria and West African countries
 - 🇳🇬 **Nigerian Context**: Comprehensive keyword matching for Nigerian cities, states, politicians, organizations
 - 📰 **Multi-Source Monitoring**: Monitors RSS feeds from 5 major international news outlets
 - 🤖 **Telegram Alerts**: Real-time notifications via Telegram bot
@@ -18,7 +18,7 @@ A Node.js application that monitors RSS feeds from major news outlets (BBC, CNN,
 ### Phase 1: ✅ COMPLETED
 - ✅ RSS Feed Monitoring
 - ✅ Nigerian Keyword Filtering  
-- ✅ Breaking News Detection
+- ✅ News Filtering
 - ✅ Duplicate Prevention
 - ✅ Logging System
 - ✅ Rate Limiting

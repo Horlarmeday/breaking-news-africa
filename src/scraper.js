@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const { logger, textUtils, retry, sleep } = require('./utils');
 const { BREAKING_NEWS_KEYWORDS, ALL_WEST_AFRICAN_KEYWORDS, ALL_NIGERIAN_KEYWORDS } = require('../config/keywords');
-const { SOCIAL_ACCOUNTS, RSS_FEEDS } = require('../config/feeds');
+const { SOCIAL_ACCOUNTS } = require('../config/feeds');
 const config = require('../config/config');
 
 class SocialMediaScraper {
@@ -136,48 +136,11 @@ class SocialMediaScraper {
     return hasWestAfricanContext;
   }
 
-  /**
-   * Parse RSS feed and extract articles
-   */
-  async parseRSSFeed(url, sourceName) {
-    try {
-      const response = await this.httpClient.get(url);
-      const $ = cheerio.load(response.data, { xmlMode: true });
-      
-      const articles = [];
-      
-      // Parse RSS items
-      $('item').each((index, element) => {
-        if (index >= 20) return false; // Limit to 20 articles per feed
-        
-        const $item = $(element);
-        const title = $item.find('title').text().trim();
-        const description = $item.find('description').text().trim();
-        const link = $item.find('link').text().trim();
-        const pubDate = $item.find('pubDate').text().trim();
-        
-        if (title && title.length > 10) {
-          articles.push({
-            title: title,
-            content: description || '',
-            link: link,
-            timestamp: pubDate ? new Date(pubDate).toISOString() : new Date().toISOString(),
-            source: sourceName
-          });
-        }
-      });
-      
-      return articles;
-      
-    } catch (error) {
-      logger.error(`❌ Error parsing RSS feed ${url}:`, error.message);
-      return [];
-    }
-  }
+
 
   /**
-   * Scrape RSS feeds from news websites (alternative to social media)
-   * This is more reliable than scraping social media pages directly
+   * Scrape news websites directly (fallback method)
+   * This complements RSS feeds by scraping sites that may not have RSS or have limited RSS content
    */
   async scrapeNewsWebsite(url, sourceName) {
     try {
@@ -235,36 +198,23 @@ class SocialMediaScraper {
   }
 
   /**
-   * Scrape alternative news sources (RSS-like content)
+   * Scrape fallback web sources (non-RSS content)
+   * This focuses on actual web scraping, not RSS feeds which are handled by rssMonitor.js
    */
-  async scrapeAlternativeSources() {
-    // Convert RSS feeds to sources for scraping
-    const sources = [];
-    
-    // Extract all RSS feed URLs from the nested structure
-    Object.entries(RSS_FEEDS).forEach(([key, feedConfig]) => {
-      feedConfig.urls.forEach(url => {
-        sources.push({
-          url: url,
-          name: feedConfig.name,
-          isRSS: true
-        });
-      });
-    });
-    
-    // Add fallback web scraping sources if needed
+  async scrapeFallbackSources() {
+    // Fallback web scraping sources (not RSS feeds)
     const fallbackSources = [
       { url: 'https://www.bbc.com/news/world/africa', name: 'BBC Africa Fallback', isRSS: false },
+      { url: 'https://www.aljazeera.com/africa/', name: 'Al Jazeera Africa Fallback', isRSS: false },
+      { url: 'https://www.africanews.com/', name: 'Africanews Fallback', isRSS: false },
     ];
     
     const allArticles = [];
     
-    for (const source of sources) {
+    for (const source of fallbackSources) {
       try {
-        // Use RSS parsing for RSS feeds, web scraping for others
-        const articles = source.isRSS 
-          ? await this.parseRSSFeed(source.url, source.name)
-          : await this.scrapeNewsWebsite(source.url, source.name);
+        // Only use web scraping for fallback sources
+        const articles = await this.scrapeNewsWebsite(source.url, source.name);
         
         for (const article of articles) {
           const postId = this.generatePostId('web', source.name, article.title, article.timestamp);
@@ -296,7 +246,7 @@ class SocialMediaScraper {
         }
         
         // Delay between sources to be respectful
-        await sleep(2000);
+        await sleep(3000);
         
       } catch (error) {
         logger.error(`❌ Error scraping ${source.name}:`, error.message);
@@ -307,33 +257,33 @@ class SocialMediaScraper {
   }
 
   /**
-   * Scrape all configured sources (alternative approach without social media)
+   * Scrape fallback web sources (complementary to RSS feeds)
    */
   async scrapeAllSocialMedia() {
     if (!this.isEnabled) {
       return [];
     }
     
-    logger.info('🔍 Starting web scraping (alternative to social media)...');
+    logger.info('🔍 Starting fallback web scraping (complementary to RSS feeds)...');
     const startTime = Date.now();
     
     let allNewPosts = [];
     
     try {
-      // Instead of scraping social media directly (which is unreliable),
-      // we'll scrape news websites that are more accessible
-      const articles = await this.scrapeAlternativeSources();
+      // Scrape fallback web sources that are not covered by RSS feeds
+      // This complements the RSS monitoring done by rssMonitor.js
+      const articles = await this.scrapeFallbackSources();
       allNewPosts = allNewPosts.concat(articles);
       
     } catch (error) {
-      logger.error('❌ Error during web scraping:', error.message);
+      logger.error('❌ Error during fallback web scraping:', error.message);
     }
     
     // Save processed posts
     await this.saveProcessedPosts();
     
     const duration = Date.now() - startTime;
-    logger.info(`✅ Web scraping completed in ${Math.round(duration/1000)}s. Found ${allNewPosts.length} new West African articles.`);
+    logger.info(`✅ Fallback web scraping completed in ${Math.round(duration/1000)}s. Found ${allNewPosts.length} new West African articles.`);
     
     return allNewPosts;
   }

@@ -7,7 +7,7 @@ const SocialMediaScraper = require('./src/scraper');
 const { logger, RateLimiter } = require('./src/utils');
 const config = require('./config/config');
 
-class BreakingNewsAlertSystem {
+class NewsAlertSystem {
   constructor() {
     this.rssMonitor = new RSSMonitor();
     this.telegramNotifier = new TelegramNotifier();
@@ -34,7 +34,7 @@ class BreakingNewsAlertSystem {
    * Initialize the alert system
    */
   async init() {
-    logger.info('🚀 Initializing NNB NEWS ALERT...');
+    logger.info('🚀 Initializing NNB NEWS ALERT System...');
     
     // Validate configuration (warn but don't exit in development)
     if (!config.telegram.enabled && !config.email.enabled) {
@@ -80,7 +80,7 @@ class BreakingNewsAlertSystem {
     logger.info('🧪 Running initial RSS feed test...');
     try {
       const testArticles = await this.rssMonitor.parseAllFeeds();
-      logger.info(`✅ Initial test completed. Found ${testArticles.length} breaking news articles.`);
+      logger.info(`✅ Initial test completed. Found ${testArticles.length} news articles.`);
       
       if (testArticles.length > 0) {
         logger.info('📰 Sample articles found:');
@@ -93,7 +93,7 @@ class BreakingNewsAlertSystem {
     }
     
     this.isRunning = true;
-    logger.info('✅ NNB NEWS ALERT initialized successfully!');
+    logger.info('✅ NNB NEWS ALERT System initialized successfully!');
   }
 
   /**
@@ -114,11 +114,11 @@ class BreakingNewsAlertSystem {
       this.stats.totalArticlesProcessed += newArticles.length;
       
       if (newArticles.length === 0) {
-        logger.info('📰 No new Nigerian breaking news found.');
+        logger.info('📰 No new Nigerian news found.');
         return;
       }
       
-      logger.info(`🚨 Found ${newArticles.length} new Nigerian breaking news alert(s)!`);
+      logger.info(`📰 Found ${newArticles.length} new Nigerian news article(s)!`);
       
       // Process each new article
       for (const article of newArticles) {
@@ -160,11 +160,11 @@ class BreakingNewsAlertSystem {
       this.stats.totalSocialPostsProcessed += newPosts.length;
       
       if (newPosts.length === 0) {
-        logger.info('📱 No new social media breaking news found.');
+        logger.info('📱 No new social media news found.');
         return;
       }
       
-      logger.info(`🚨 Found ${newPosts.length} new social media breaking news alert(s)!`);
+      logger.info(`📱 Found ${newPosts.length} new social media news alert(s)!`);
       
       // Process each new post
       for (const post of newPosts) {
@@ -288,7 +288,7 @@ class BreakingNewsAlertSystem {
     const timestamp = new Date().toLocaleString();
     const source = article.source.toUpperCase();
     
-    return `🚨 BREAKING: NNB NEWS ALERT
+    return `📰 NNB NEWS ALERT
 
 📰 ${article.title}
 
@@ -299,7 +299,7 @@ class BreakingNewsAlertSystem {
 
 📝 ${article.description ? article.description.substring(0, 200) + (article.description.length > 200 ? '...' : '') : 'No description available'}
 
-#BreakingNews #Nigeria #${source}`;
+#News #Nigeria #${source}`;
   }
 
   /**
@@ -343,7 +343,7 @@ class BreakingNewsAlertSystem {
     });
     
     logger.info(`⏰ RSS monitoring scheduled every ${config.intervals.rss} minutes`);
-    logger.info('🟢 Breaking News Alert System is now running!');
+    logger.info('🟢 News Alert System is now running!');
     logger.info('Press Ctrl+C to stop...');
     
     // Run initial checks
@@ -363,7 +363,7 @@ class BreakingNewsAlertSystem {
    */
   stop() {
     this.isRunning = false;
-    logger.info('🛑 Breaking News Alert System stopped.');
+    logger.info('🛑 News Alert System stopped.');
   }
 
   /**
@@ -439,7 +439,7 @@ process.on('SIGTERM', async () => {
 
 // Initialize and start the system
 async function main() {
-  alertSystem = new BreakingNewsAlertSystem();
+  alertSystem = new NewsAlertSystem();
   
   try {
     // Create Express server for Render deployment first
@@ -503,4 +503,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = BreakingNewsAlertSystem;
+module.exports = NewsAlertSystem;

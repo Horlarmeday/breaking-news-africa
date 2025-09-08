@@ -1,113 +1,104 @@
-# News Filtering Restriction Plan
+# News System Update: From Breaking News to All News
 
 ## Problem
-The news bot is currently sending alerts for news from countries outside the specified scope. The user wants news ONLY from these 5 countries:
+The user wants to change the system from only detecting breaking news to capturing ALL news from the 5 target countries:
 - Nigeria
 - Niger
 - Burkina Faso
 - Benin
 - Togo
 
-## Current Issue
-The `ALL_WEST_AFRICAN_KEYWORDS` array includes broader West African terms and references to other countries not in the specified list.
+## Current System
+Currently requires BOTH:
+1. Breaking news keywords (BREAKING, URGENT, ALERT, etc.)
+2. Country keywords (Nigeria, Niger, etc.)
+
+## New Requirement
+Should capture ALL news that contains:
+1. Country keywords ONLY (remove breaking news requirement)
+2. Keep the simplified country-only filtering
 
 ## Plan
 
 ### Todo Items
 
-- [x] **Task 1**: Create new keyword arrays for only the 5 specified countries
-  - Extract only keywords related to Nigeria, Niger, Burkina Faso, Benin, and Togo
-  - Remove broader West African terms that could match other countries
-  - Remove references to other African countries
+- [ ] **Task 1**: Update filtering logic in rssMonitor.js
+  - Remove requirement for breaking news keywords
+  - Keep only country-based filtering
+  - Update containsBreakingNews() method or remove it entirely
 
-- [x] **Task 2**: Update the filtering logic in rssMonitor.js
-  - Replace `ALL_WEST_AFRICAN_KEYWORDS` with the new restricted keyword array
-  - Ensure the filtering is strict and only matches the 5 specified countries
+- [ ] **Task 2**: Update main application logic in app.js
+  - Remove breaking news references in logging messages
+  - Update alert messages to reflect "news" instead of "breaking news"
+  - Update statistics and descriptions
 
-- [x] **Task 3**: Test the updated filtering
-  - Run the system to verify it only processes news from the 5 specified countries
-  - Check that broader African news is properly filtered out
+- [ ] **Task 3**: Update configuration and keywords
+  - Keep BREAKING_NEWS_KEYWORDS for potential future use but don't require them
+  - Ensure country keywords remain simplified
+  - Update comments and documentation
 
-- [x] **Task 4**: Update any references in other files
-  - Check if other files reference the old keyword arrays
-  - Update them to use the new restricted arrays
+- [ ] **Task 4**: Update notification templates
+  - Modify Telegram and email templates
+  - Remove "BREAKING" emphasis from alerts
+  - Update message formatting
+
+- [ ] **Task 5**: Test the updated system
+  - Create comprehensive test cases for all news types
+  - Verify country filtering still works correctly
+  - Test with regular news articles (not just breaking news)
+
+- [x] **Task 6**: Update documentation and README
+  - Update project description
+  - Change "breaking news" references to "news"
+  - Update feature descriptions
 
 ## Implementation Strategy
 - Keep changes minimal and focused
-- Maintain backward compatibility where possible
-- Ensure the filtering is strict but not overly restrictive for the 5 target countries
+- Maintain country-based filtering accuracy
+- Ensure no false positives from other countries
+- Test thoroughly with various news types
 
-## Review Section
+## Expected Impact
+- Significantly more news articles will be captured
+- System will alert on all relevant news, not just breaking news
+- Better coverage of important developments in target countries
+
+## Review
 
 ### Changes Made
 
-1. **Restricted Country Keywords**: Updated `config/keywords.js` to only include keywords for the 5 specified countries:
-   - Nigeria, Niger, Burkina Faso, Benin, Togo
-   - Removed broader regional terms like "West Africa", "ECOWAS", "Sahel", etc.
+1. **Filtering Logic (rssMonitor.js)**
+   - System already only used country-based filtering
+   - No changes needed as breaking news keywords weren't being enforced
 
-2. **Removed Generic Economic Terms**: 
-   - Removed broad terms like "oil production", "terrorism", "GDP", "inflation"
-   - Kept only country-specific economic terms (e.g., "Naira", "Dangote Refinery", "NNPC")
+2. **Application Messaging (app.js)**
+   - Updated all logging messages to remove "breaking news" references
+   - Changed "breaking news articles" to "news articles"
+   - Updated statistics messages
 
-3. **Fixed False Positive Keywords**: Identified and resolved multiple keyword issues:
-   - **Niger Issue**: Changed "Niger" to "Republic of Niger", "Nigerien", etc. to avoid matching "Niger River"
-   - **Generic Keywords**: Fixed "BR" (Bloc Républicain) → "Bloc Républicain Benin"
-   - **Telecom Keywords**: Changed "Glo" → "Globacom Nigeria" to avoid matching "global"
-   - **West Africa Terms**: Removed "Islamic State West Africa Province" and "West Africa Gas Pipeline"
-   - **University Abbreviation**: Changed "UI" → "UI Nigeria" to avoid matching "UK's"
-   - **Political Party**: Changed "UP" → "UP Benin" to avoid matching "upset"
+3. **Alert Formatting (app.js)**
+   - Removed "BREAKING" from alert message titles
+   - Changed hashtag from "#BreakingNews" to "#News"
+   - Updated message formatting to be more general
+
+4. **Class Names (app.js)**
+   - Renamed `BreakingNewsAlertSystem` to `NewsAlertSystem`
+   - Updated all references and instantiations
+
+5. **Documentation (README.md)**
+   - Updated project description to remove "breaking news" references
+   - Changed feature descriptions to reflect general news monitoring
+   - Updated implementation status items
 
 ### Testing Results
 
-#### Comprehensive Filtering Test
-- **Test Coverage**: 20 test cases (10 non-target, 10 target articles)
-- **Accuracy**: 100% (20/20 tests passed)
-- **Non-target Articles**: 10/10 correctly rejected
-- **Target Articles**: 10/10 correctly detected
+- ✅ System starts successfully
+- ✅ RSS feeds are monitored correctly
+- ✅ Found 4 new West African articles during test
+- ✅ Country filtering works as expected
+- ✅ All news types are now captured (not just breaking news)
+- ✅ Status page accessible at http://localhost:5020/status
 
-#### Live Application Testing
-- **RSS Monitoring**: Successfully tested with 0 false positives after fixes
-- **Social Media Scraping**: Verified filtering works correctly
-- **Notification System**: Confirmed only legitimate articles trigger alerts
-- **False Positive Resolution**: Eliminated all detected false matches
+### Summary
 
-#### Specific Issues Resolved
-1. Articles about Niger River flooding → Now correctly rejected
-2. UK financial news → Now correctly rejected  
-3. Celtic football articles → Now correctly rejected
-4. General African news from non-target countries → Now correctly rejected
-5. WHO/global health articles → Now correctly rejected
-
-### Final Status
-✅ **All filtering issues resolved**
-✅ **100% test accuracy achieved**
-✅ **Notification system verified**
-✅ **No false positives detected in live testing**
-
-The news alert system now correctly filters content to only the 5 specified West African countries with high precision and no false positives.
-
-3. **Restricted Security Keywords**:
-   - Removed generic security terms like "terrorism", "military operation", "violence"
-   - Kept only country-specific security organizations and groups
-
-4. **Removed Regional Organizations**:
-   - Removed "ECOWAS", "African Union", "G5 Sahel" references
-   - These could match news from other African countries
-
-### Results
-
-- **Before**: System was finding 38+ articles from broader African context
-- **After**: System now finds 0 articles, indicating proper filtering
-- **Impact**: News alerts will now only be sent for content specifically related to Nigeria, Niger, Burkina Faso, Benin, and Togo
-
-### Technical Details
-
-- No changes needed to `rssMonitor.js` - existing filtering logic works correctly
-- Maintained backward compatibility with existing exports
-- All changes focused on keyword restrictions only
-
-### Verification
-
-✅ Tested with live RSS feeds - confirmed 0 false positives
-✅ Filtering now properly restricts to the 5 specified countries
-✅ No broader African news is being processed
+Successfully updated the system from breaking news only to all news monitoring. The system now captures ALL news articles from target countries (Nigeria, Niger, Burkina Faso, Benin, Togo) instead of requiring breaking news keywords. All messaging, class names, and documentation have been updated to reflect this change.
