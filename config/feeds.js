@@ -16,17 +16,35 @@ const RSS_FEEDS = {
     ]
   },
 
-  reuters: {
-    name: 'Reuters',
+  // Reuters official RSS feeds discontinued in June 2020
+  // Using Google News RSS as alternative for Reuters content
+  reuters_via_google: {
+    name: 'Reuters (via Google News)',
     urls: [
-      'https://www.reuters.com/world/rss'
+      'https://news.google.com/rss/search?q=when:24h+allinurl:reuters.com&ceid=US:en&hl=en-US&gl=US'
     ]
   },
 
-  ap: {
-    name: 'Associated Press',
+  // AP official RSS feeds discontinued, similar to Reuters
+  // Using Google News RSS as alternative for AP content
+  ap_via_google: {
+    name: 'AP News (via Google News)',
     urls: [
-      'https://apnews.com/index.rss'
+      'https://news.google.com/rss/search?q=when:24h+allinurl:apnews.com&ceid=US:en&hl=en-US&gl=US'
+    ]
+  },
+
+  aljazeera: {
+    name: 'Al Jazeera',
+    urls: [
+      'https://www.aljazeera.com/xml/rss/all.xml'
+    ]
+  },
+
+  dw: {
+    name: 'Deutsche Welle',
+    urls: [
+      'https://rss.dw.com/xml/rss-en-all'
     ]
   },
 
@@ -44,10 +62,12 @@ const RSS_FEEDS = {
     ]
   },
 
-  afp: {
-    name: 'AFP',
+  // AFP feed returns 404 error - replaced with working alternative
+  
+  euronews: {
+    name: 'Euronews',
     urls: [
-      'https://www.afp.com/en/rss'
+      'https://www.euronews.com/rss?format=mrss'
     ]
   }
 }
